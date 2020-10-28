@@ -3,32 +3,10 @@
 #include <stdio.h>
 
 char buffer;
-sem_t s0, s1, acordaBarbeiro; // Declaração das variáveis
+sem_t acordaBarbeiro; // Declaração das variáveis
 int cadeirasEsperaOcupadas = 0;
 int barbeiroDormindo = 0;
 int lugarVago = 3;
-
-void *produtor() {
-	char  item;
-	while(1) {
-        sem_wait (&s0);
-		item = 'A';
-		printf("Produzi  A\n");
-		buffer = item;
-        sem_post(&s1);
-	}
-}
-
-void *consumidor() {
-	char item;
-	while(1) {
-		sem_wait(&s1);
-		item = buffer;
-		printf(">>>>>>>>>>Consumi o item %c\n", item);
-		sem_post(&s0);
-	}
-}
-
 
 int geraNumeroAleatorio(int qtdValores) {
     time_t t;
@@ -59,8 +37,8 @@ void *cadeiraBarbeiro() {
 
 void *salaEspera() {
 	while(1) {
-        sleep(geraNumeroAleatorio(5) + 4);//4 a 8 segundos
-        printf("Cliente entrou na barbearia");
+        sleep(geraNumeroAleatorio(1) + 1);//1 a 2 segundos
+        printf("Cliente entrou na barbearia\n");
         if (lugarVago > 0 ){
             if (barbeiroDormindo){
                 printf("O cliente chegou e o barbeiro está dormindo, ele ira acordar o barbeiro\n");
@@ -77,14 +55,9 @@ void *salaEspera() {
 
 
 int main() {
-	printf("teste");
 	pthread_t t1, t2;
-	sem_init (&s0, 0, 1);
-	sem_init (&s1, 0, 0);
 	sem_init (&acordaBarbeiro, 0, 0);
 
-	// (void) pthread_create(&t1, NULL, produtor, NULL);
-	// (void) pthread_create(&t2, NULL, consumidor, NULL);
 	(void) pthread_create(&t1, NULL, cadeiraBarbeiro, NULL);
 	(void) pthread_create(&t2, NULL, salaEspera, NULL);
    	(void) pthread_join(t1, NULL);
