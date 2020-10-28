@@ -15,3 +15,6 @@ houver cadeira disponível na sala de espera, o cliente vai embora.
 
 ● Implemente uma solução para este problema. Utilize semáforos para a
 sincronização das threads.
+
+Para compilar: gcc -pthread  -o barbeiro  barbeiro.c
+Para executar: ./barbeiro
